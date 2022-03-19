@@ -13,7 +13,7 @@ class UnivariateGaussian:
 
         Parameters
         ----------
-        biased_var : bool, default=True
+        biased_var : bool, default= False
             Should fitted estimator of variance be a biased or unbiased estimator
 
         Attributes
@@ -51,10 +51,39 @@ class UnivariateGaussian:
         Sets `self.mu_`, `self.var_` attributes according to calculated estimation (where
         estimator is either biased or unbiased). Then sets `self.fitted_` attribute to `True`
         """
-        raise NotImplementedError()
+
+        self.mu_ = self.estimate_mu(X)
+        if self.biased_:
+            self.var_ = self.estimate_biased_var(X)
+        else:
+            self.var_ = self.estimate_unbiased_var(X)
 
         self.fitted_ = True
         return self
+
+    def estimate_mu(self, X: np.ndarray) -> float:
+        """
+        :param X: ndarray of shape (n_samples, )
+        :return: Estimated expectation.
+        """
+        return float(np.mean(X))
+
+    def estimate_biased_var(self, X: np.ndarray) -> float:
+        """
+        :param X: ndarray of shape (n_samples, )
+        :return: Estimated biased variance. (MLE variance)
+        """
+        n = X.shape[0]
+        biased_var = (1/n) * np.sum(np.power((X - self.mu_), 2))
+        return float(biased_var)
+
+    def estimate_unbiased_var(self, X: np.ndarray) -> float:
+        """
+        :param X: ndarray of shape (n_samples, )
+        :return: Estimated un-biased variance.
+        """
+        n = X.shape[0]
+        return (n / (n-1)) * self.estimate_biased_var(X)
 
     def pdf(self, X: np.ndarray) -> np.ndarray:
         """
@@ -76,7 +105,8 @@ class UnivariateGaussian:
         """
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
-        raise NotImplementedError()
+        return (1/(np.sqrt(2 * np.pi * self.var_))) * np.exp(-1 * np.power(X - self.mu_, 2) / (2 * self.var_))
+
 
     @staticmethod
     def log_likelihood(mu: float, sigma: float, X: np.ndarray) -> float:
@@ -96,8 +126,9 @@ class UnivariateGaussian:
         -------
         log_likelihood: float
             log-likelihood calculated
-        """
-        raise NotImplementedError()
+        """  # todo: tell avner about not casting m
+        constant = np.log(1/(np.sqrt(2 * np.pi * sigma)))
+        return float(np.sum(constant + (-1 * np.power(X - mu, 2) / (2 * sigma)))) # todo: test
 
 
 class MultivariateGaussian:
