@@ -13,7 +13,7 @@ class UnivariateGaussian:
 
         Parameters
         ----------
-        biased_var : bool, default= False
+        biased_var : bool, default=False
             Should fitted estimator of variance be a biased or unbiased estimator
 
         Attributes
@@ -146,11 +146,11 @@ class MultivariateGaussian:
             To be set as True in `MultivariateGaussian.fit` function.
 
         mu_: ndarray of shape (n_features,)
-            Estimated expectation initialized as None. To be set in `MultivariateGaussian.ft`
+            Estimated expectation initialized as None. To be set in `MultivariateGaussian.fit`
             function.
 
         cov_: ndarray of shape (n_features, n_features)
-            Estimated covariance initialized as None. To be set in `MultivariateGaussian.ft`
+            Estimated covariance initialized as None. To be set in `MultivariateGaussian.fit`
             function.
         """
         self.mu_, self.cov_ = None, None
@@ -167,7 +167,7 @@ class MultivariateGaussian:
 
         Returns
         -------
-        self : returns an instance of self.
+        self : returns an instance of self
 
         Notes
         -----
