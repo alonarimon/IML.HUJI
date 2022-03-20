@@ -10,6 +10,12 @@ VAR_Q1 = 1
 SAMPLES_NUM_Q1 = 1000
 JUMP_Q1 = 10
 
+# EX1 Q3.2
+MU_Q2 = np.array([0, 0, 4, 0])
+COV_Q2 = np.array([[1, 0.2, 0, 0.5], [0.2, 2, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]])
+SAMPLES_NUM_Q2 = 1000
+JUMP_Q2 = 10
+
 
 def test_univariate_gaussian():
     # todo: add all output to the PDF
@@ -47,7 +53,13 @@ def test_univariate_gaussian():
 
 def test_multivariate_gaussian():
     # Question 4 - Draw samples and print fitted model
-    raise NotImplementedError()
+    multy = MultivariateGaussian()
+    samples = np.random.multivariate_normal(MU_Q2, COV_Q2, SAMPLES_NUM_Q2)
+    multy.fit(samples)
+
+    print(multy.mu_)
+    print(multy.cov_)
+
 
     # Question 5 - Likelihood evaluation
     raise NotImplementedError()
