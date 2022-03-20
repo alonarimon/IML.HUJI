@@ -235,6 +235,6 @@ class MultivariateGaussian:
 
         constant = m * np.log(np.power(2*np.pi, d) * det_cov)
         x_dependent = np.sum(np.diagonal(normilized_x @ inv_cov @ normilized_x.T))
-        res = -0.5 * (constant + x_dependent)
+        res = -0.5 * (constant + x_dependent) # todo : better solution diagonal
 
         return res

@@ -14,7 +14,7 @@ JUMP_Q1 = 10
 MU_Q2 = np.array([0, 0, 4, 0])
 COV_Q2 = np.array([[1, 0.2, 0, 0.5], [0.2, 2, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]])
 SAMPLES_NUM_Q2 = 1000
-JUMP_Q2 = 10
+LINE_SIZE_Q2 = 200
 
 
 def test_univariate_gaussian():
@@ -62,13 +62,25 @@ def test_multivariate_gaussian():
 
 
     # Question 5 - Likelihood evaluation
-    raise NotImplementedError()
+    f_values = np.linspace(-10, 10, LINE_SIZE_Q2)
+    f1_f2_values = np.array(np.meshgrid(f_values, f_values))
+    z = np.zeros((LINE_SIZE_Q2, LINE_SIZE_Q2))
+    expectations = np.array([f1_f2_values[0, :, :], z, f1_f2_values[1, :, :], z]).T
+
+    ll = np.apply_along_axis(MultivariateGaussian.log_likelihood, 2, expectations, COV_Q2, samples)
+
+    heatmap = go.Heatmap(x=f_values, y=f_values, z=ll)
+    layout = go.Layout(title="log-likelihood calculated per mu values")
+    fig = go.Figure(data=heatmap, layout=layout).update_xaxes(title_text="f3 value") \
+        .update_yaxes(title_text="f1 value")
+    fig.show()
+
 
     # Question 6 - Maximum likelihood
-    raise NotImplementedError()
+    # raise NotImplementedError()
 
 
 if __name__ == '__main__':
     np.random.seed(0)
-    test_univariate_gaussian()
-    # test_multivariate_gaussian()
+    # test_univariate_gaussian()
+    test_multivariate_gaussian()
