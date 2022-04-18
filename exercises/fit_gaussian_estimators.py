@@ -18,7 +18,6 @@ LINE_SIZE_Q2 = 200
 
 
 def test_univariate_gaussian():
-    # todo: add all output to the PDF
     # Question 1 - Draw samples and print fitted model
     unbiased_g = UnivariateGaussian()
     samples = np.random.normal(MU_Q1, VAR_Q1, SAMPLES_NUM_Q1)
@@ -29,7 +28,7 @@ def test_univariate_gaussian():
     # Question 2 - Empirically showing sample mean is consistent
     samples_sizes = np.arange(JUMP_Q1, SAMPLES_NUM_Q1+JUMP_Q1, JUMP_Q1)
     distance = np.zeros(samples_sizes.shape[0])
-    for i in range(samples_sizes.shape[0]):  # todo: check if we can do without loop
+    for i in range(samples_sizes.shape[0]):
         unbiased_g.fit(samples[:samples_sizes[i]])
         distance[i] = abs(MU_Q1 - unbiased_g.mu_)
 
@@ -42,7 +41,7 @@ def test_univariate_gaussian():
     fig.show()
 
     # Question 3 - Plotting Empirical PDF of fitted model
-    pdfs = unbiased_g.pdf(samples) #todo: add to the PDF + What are you expecting to see in the plot?
+    pdfs = unbiased_g.pdf(samples)
     data = go.Scatter(x=samples, y=pdfs, mode='markers')
     fig = go.Figure(data=data) \
         .update_layout(title_text="Empirical PDF of fitted model") \
@@ -63,9 +62,9 @@ def test_multivariate_gaussian():
 
     # Question 5 - Likelihood evaluation
     f_values = np.linspace(-10, 10, LINE_SIZE_Q2)
-    f1_f2_values = np.array(np.meshgrid(f_values, f_values))
+    f1_f3_values = np.array(np.meshgrid(f_values, f_values))
     z = np.zeros((LINE_SIZE_Q2, LINE_SIZE_Q2))
-    expectations = np.array([f1_f2_values[0, :, :], z, f1_f2_values[1, :, :], z]).T
+    expectations = np.array([f1_f3_values[0, :, :], z, f1_f3_values[1, :, :], z]).T
 
     ll = np.apply_along_axis(MultivariateGaussian.log_likelihood, 2, expectations, COV_Q2, samples)
 
@@ -77,10 +76,12 @@ def test_multivariate_gaussian():
 
 
     # Question 6 - Maximum likelihood
-    # raise NotImplementedError()
-
+    max_indexes = np.unravel_index(np.argmax(ll, axis=None), ll.shape)
+    best_f1 = np.around(f_values[max_indexes[0]], decimals=3)
+    best_f3 = np.around(f_values[max_indexes[1]], decimals=3)
+    print(f"MLL model  : \nf1: {best_f1}, f3: {best_f3}")
 
 if __name__ == '__main__':
     np.random.seed(0)
-    # test_univariate_gaussian()
+    test_univariate_gaussian()
     test_multivariate_gaussian()

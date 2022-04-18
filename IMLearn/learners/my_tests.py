@@ -83,6 +83,14 @@ def test_multy_loglikelihood(mu, cov):
     print(ll, type(ll))
 
 
+ # ======== QUIZ =================
+
+def test_quiz():
+    samples = np.array([1, 5, 2, 3, 8, -4, -2, 5, 1, 10, -10, 4, 5, 2, 7, 1, 1, 3, 2, -1, -3, 1, -4, 1, 2, 1,
+                        -4, -4, 1, 3, 2, 6, -6, 8, 3, -6, 4, 1, -2, 3, 1, 4, 1, 4, -2, 3, -1, 0, 3, 5, 0, -2])
+    ll1 = ge.UnivariateGaussian.log_likelihood(1, 1, samples)
+    ll2 = ge.UnivariateGaussian.log_likelihood(10, 1, samples)
+    print(f"ll1: {ll1}, ll2: {ll2}")
 
 if __name__ == '__main__':
     # ========== UnivariateGaussian ============
@@ -92,6 +100,9 @@ if __name__ == '__main__':
     # ========== MultivariateGaussian ============
     # test_multy_pdf(Y1)
     # test_multy_pdf(Y2)
-    mu = np.array([0,15,7])
-    cov = np.array([[1,0,0],[0,1,0],[0,0,1]])
-    test_multy_loglikelihood(mu, cov)
+    # mu = np.array([0,15,7])
+    # cov = np.array([[1,0,0],[0,1,0],[0,0,1]])
+    # test_multy_loglikelihood(mu, cov)
+
+    # ========== quiz ===============
+    test_quiz()

@@ -126,9 +126,9 @@ class UnivariateGaussian:
         -------
         log_likelihood: float
             log-likelihood calculated
-        """  # todo: tell avner about not casting m
+        """
         constant = np.log(1/(np.sqrt(2 * np.pi * sigma)))
-        return float(np.sum(constant + (-1 * np.power(X - mu, 2) / (2 * sigma)))) # todo: test
+        return float(np.sum(constant + (-1 * np.power(X - mu, 2) / (2 * sigma))))
 
 
 class MultivariateGaussian:
@@ -204,7 +204,7 @@ class MultivariateGaussian:
         constant = 1/(np.sqrt(np.power(2*np.pi, d) * np.linalg.det(self.cov_)))
         normalized_x = X - self.mu_
         pdf = constant * np.exp((-0.5) * np.diagonal(
-            (normalized_x @ np.linalg.inv(self.cov_) @ normalized_x.T))) # todo: better solution then the diagonal
+            (normalized_x @ np.linalg.inv(self.cov_) @ normalized_x.T)))
         return pdf
 
     @staticmethod
@@ -235,6 +235,6 @@ class MultivariateGaussian:
 
         constant = m * np.log(np.power(2*np.pi, d) * det_cov)
         x_dependent = np.sum(np.diagonal(normilized_x @ inv_cov @ normilized_x.T))
-        res = -0.5 * (constant + x_dependent) # todo : better solution diagonal
+        res = -0.5 * (constant + x_dependent)
 
         return res
