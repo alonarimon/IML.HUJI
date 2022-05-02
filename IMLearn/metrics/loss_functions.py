@@ -1,5 +1,6 @@
 import numpy as np
 
+POSITIVE = 1
 
 def mean_square_error(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
@@ -37,7 +38,13 @@ def misclassification_error(y_true: np.ndarray, y_pred: np.ndarray, normalize: b
     -------
     Misclassification of given predictions
     """
-    raise NotImplementedError()
+    if y_true.shape[0] != y_pred.shape[0]:
+        raise Exception("predicted responses must be in the same size as true")
+
+    miss_num = np.sum(y_true != y_pred)
+    if normalize:
+        return float(miss_num/y_true.shape[0])
+    return float(miss_num)
 
 
 def accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
@@ -55,7 +62,16 @@ def accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     -------
     Accuracy of given predictions
     """
-    raise NotImplementedError()
+    if y_true.shape[0] != y_pred.shape[0]:
+        raise Exception("predicted responses must be in the same size as true")
+
+    samples_num = y_true.shape[0]
+
+    # TP_TN = TP + TN = all the agreements between y_true and y_pred
+    TP_TN = np.sum(y_true == y_pred)
+
+    accuracy = float(TP_TN / samples_num)
+    return accuracy
 
 
 def cross_entropy(y_true: np.ndarray, y_pred: np.ndarray) -> float:

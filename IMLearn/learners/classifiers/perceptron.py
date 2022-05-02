@@ -6,7 +6,7 @@ import numpy as np
 
 
 def default_callback(fit: Perceptron, x: np.ndarray, y: int):
-    pass
+    pass  # todo
 
 
 class Perceptron(BaseEstimator):
@@ -31,10 +31,12 @@ class Perceptron(BaseEstimator):
             A callable to be called after each update of the model while fitting to given data
             Callable function should receive as input a Perceptron instance, current sample and current response
     """
+
     def __init__(self,
-                 include_intercept: bool = True,
+                 include_intercept: bool = True,  # todo!
                  max_iter: int = 1000,
-                 callback: Callable[[Perceptron, np.ndarray, int], None] = default_callback):
+                 callback: Callable[
+                     [Perceptron, np.ndarray, int], None] = default_callback):
         """
         Instantiate a Perceptron classifier
 
@@ -63,7 +65,7 @@ class Perceptron(BaseEstimator):
 
         Parameters
         ----------
-        X : ndarray of shape (n_samples, n_features)
+        X : ndarray of shape (n_samples, num_features)
             Input data to fit an estimator for
 
         y : ndarray of shape (n_samples, )
@@ -73,7 +75,26 @@ class Perceptron(BaseEstimator):
         -----
         Fits model with or without an intercept depending on value of `self.fit_intercept_`
         """
-        raise NotImplementedError()
+        if self.include_intercept_:
+            #  make the first column of X be ones
+            X = np.pad(X, [(0, 0), (1, 0)], mode="constant", constant_values=1)
+
+        num_samples = X.shape[0]
+        num_features = X.shape[1]
+
+        # initialization
+        self.coefs_ = np.zeros(num_features)
+        self.fitted_ = True
+
+        # perceptron loop
+        for t in range(self.max_iter_):
+            for i in range(num_samples):
+                if (y[i] * (self.coefs_ @ X[i].reshape(num_features, 1))) <= 0:
+                    self.coefs_ = self.coefs_ + (y[i] * X[i])
+                    self.callback_(self, X[i], y[i])
+                    break
+                if i == num_samples - 1:  # all samples mapped correctly
+                    return
 
     def _predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -89,7 +110,16 @@ class Perceptron(BaseEstimator):
         responses : ndarray of shape (n_samples, )
             Predicted responses of given samples
         """
-        raise NotImplementedError()
+        if self.include_intercept_:
+            #  make the first column of X be ones
+            X = np.pad(X, [(0, 0), (1, 0)], mode="constant", constant_values=1)
+
+        num_samples = X.shape[0]
+        num_features = X.shape[1]
+        sign = np.sign(X @ self.coefs_.reshape(num_features, 1)).reshape(num_samples)
+        sign[sign == 0] = 1  # we want only 2 labels where 0 is mapped to one.
+        return sign
+
 
     def _loss(self, X: np.ndarray, y: np.ndarray) -> float:
         """
@@ -109,4 +139,5 @@ class Perceptron(BaseEstimator):
             Performance under missclassification loss function
         """
         from ...metrics import misclassification_error
-        raise NotImplementedError()
+        pred_y = self._predict(X)
+        return misclassification_error(y, pred_y)
