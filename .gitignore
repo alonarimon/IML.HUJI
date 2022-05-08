@@ -9,3 +9,4 @@ figures/*.png
 **.ipynb_checkpoints
 
 /polonomial_tests.py
+ex4_tests.py
