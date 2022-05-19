@@ -45,7 +45,7 @@ class DecisionStump(BaseEstimator):
         mistakes_indexes = (weighted_true_y * predicted_y) < 0
         mistakes = np.abs(weighted_true_y[mistakes_indexes])
 
-        return float(np.sum(mistakes) / m) #todo: with the normalization? (/m?)
+        return float(np.sum(mistakes) / m)
 
 
     def _fit(self, X: np.ndarray, y: np.ndarray) -> NoReturn:
@@ -78,6 +78,7 @@ class DecisionStump(BaseEstimator):
         self.threshold_ = threshold
         self.j_ = j
         self.sign_ = sign
+
 
         self.fitted_ = True
 
@@ -159,9 +160,14 @@ class DecisionStump(BaseEstimator):
 
         # get the index of the minimal value loss
         thr_index = np.argmin(thresholds_errors)
-        return float(unique_values[thr_index]), thresholds_errors[thr_index]
+        thr = float(unique_values[thr_index])
+        if thr_index == 0:
+            thr = -np.inf
+        if thr_index == (unique_values.shape[0]-1):
+            thr = np.inf
+        return thr, thresholds_errors[thr_index]
 
-    def _loss(self, X: np.ndarray, y: np.ndarray) -> float: #todo: change becaouse of weights?
+    def _loss(self, X: np.ndarray, y: np.ndarray) -> float:
         """
         Evaluate performance under misclassification loss function
 

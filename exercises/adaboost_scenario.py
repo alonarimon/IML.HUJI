@@ -16,7 +16,7 @@ def decision_surface(predict, t, xrange, yrange, density=120, dotted=False,
     xrange, yrange = np.linspace(*xrange, density), np.linspace(*yrange,
                                                                 density)
     xx, yy = np.meshgrid(xrange, yrange)
-    pred = predict(np.c_[xx.ravel(), yy.ravel()], t)  # todo: need this change?
+    pred = predict(np.c_[xx.ravel(), yy.ravel()], t)
 
     if dotted:
         return go.Scatter(x=xx.ravel(), y=yy.ravel(), opacity=1,
@@ -104,7 +104,7 @@ def fit_and_evaluate_adaboost(noise, n_learners=250, train_size=5000,
                         subplot_titles=[f"{t[1]} iterations" for t in T],
                         horizontal_spacing=0.05, vertical_spacing=.2)
 
-    for (i, t) in T:  # todo: test with different markers?
+    for (i, t) in T:
 
         fig.add_traces([decision_surface(ada.partial_predict, t, lims[0],
                                          lims[1], showscale=False),
@@ -168,5 +168,5 @@ def fit_and_evaluate_adaboost(noise, n_learners=250, train_size=5000,
 
 if __name__ == '__main__':
     np.random.seed(0)
-    fit_and_evaluate_adaboost(noise=0, train_size=500 )   # todo: runtime?
-    # fit_and_evaluate_adaboost(noise=0.4)
+    fit_and_evaluate_adaboost(noise=0)
+    fit_and_evaluate_adaboost(noise=0.4)

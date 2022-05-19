@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from math import atan2, pi
 
-datasets_path = r"..\datasets"  # todo: working on linux?
+datasets_path = r"..\datasets"
 
 
 def load_dataset(filename: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -51,7 +51,7 @@ def run_perceptron():
         def call(perceptron: Perceptron, x_, y_):
             losses.append(perceptron._loss(X, y))
 
-        p = Perceptron(callback=call)  # todo: intersept? max_iter?
+        p = Perceptron(callback=call)
         p._fit(X, y)
 
         # Plot figure of loss as function of fitting iteration
