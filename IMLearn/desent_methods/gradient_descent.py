@@ -6,7 +6,9 @@ from IMLearn.base import BaseModule, BaseLR
 from .learning_rate import FixedLR
 
 OUTPUT_VECTOR_TYPE = ["last", "best", "average"]
-
+LAST = 0
+BEST = 1
+AVERAGE = 2
 
 def default_callback(**kwargs) -> NoReturn:
     pass
@@ -119,4 +121,38 @@ class GradientDescent:
                 Euclidean norm of w^(t)-w^(t-1)
 
         """
-        raise NotImplementedError()
+        weights_sum = f.weights
+        weights_best = f.weights
+        objective_best = f.compute_output(X=X, y=y)
+        weights_prev = f.weights
+
+        num_iterations = 1
+        for t in range(self.max_iter_):
+
+            f.weights = f.weights -\
+                         (self.learning_rate_.lr_step(t=t) * f.compute_jacobian(X=X, y=y))
+
+            weights_sum += f.weights_
+            if f.compute_output(X=X, y=y) < objective_best:
+                objective_best = f.compute_output(X=X, y=y)
+                weights_best = f.weights
+
+            w_diff = np.linalg.norm(f.weights_ - weights_prev)
+            self.callback_(solver=self, weights=f.weights_,
+                       val=f.compute_output(X=X, y=y), grad=f.compute_jacobian(X=X, y=y),
+                       t=t, eta=self.learning_rate_.lr_step(t=t), delta=w_diff)
+            weights_prev = f.weights
+            weights_sum += f.weights
+            num_iterations += 1
+            # check stopping criterion:
+            # Training stops when the Euclidean norm of w^(t)-w^(t-1) < tol
+            if w_diff < self.tol_:
+                break
+
+        if self.out_type_ == OUTPUT_VECTOR_TYPE[BEST]:
+            f.weights = weights_best
+        elif self.out_type_ == OUTPUT_VECTOR_TYPE[AVERAGE]:
+            f.weights = weights_sum / num_iterations
+        return f.weights
+
+

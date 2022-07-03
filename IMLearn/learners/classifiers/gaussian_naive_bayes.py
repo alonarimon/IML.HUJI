@@ -59,7 +59,7 @@ class GaussianNaiveBayes(BaseEstimator):
         :param X:
         :param y:
         :return: ndarray with shape (n_classes,n_features)
-        """  # todo: without for-loop?
+        """
         return np.array(
             [X[y == classes[k]].mean(axis=0) for k in range(classes.shape[0])])
 

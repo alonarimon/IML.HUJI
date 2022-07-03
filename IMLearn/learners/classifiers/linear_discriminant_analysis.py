@@ -66,7 +66,7 @@ class LDA(BaseEstimator):
         :param X:
         :param y:
         :return: ndarray with shape (n_classes,n_features)
-        """  # todo: without for-loop?
+        """
         return np.array(
             [X[y == classes[k]].mean(axis=0) for k in range(classes.shape[0])])
 
@@ -116,7 +116,7 @@ class LDA(BaseEstimator):
         return pred
 
     def likelihood(self, X: np.ndarray) -> np.ndarray:
-        """ #todo: log likelihood? and then like predict? make sure dont have computational issues
+        """
         Calculate the likelihood of a given data over the estimated model
 
         Parameters
@@ -167,4 +167,4 @@ class LDA(BaseEstimator):
         """
         from ...metrics import misclassification_error
         y_pred = self._predict(X)
-        return misclassification_error(y_true=y, y_pred=y_pred) #todo: normalize?
+        return misclassification_error(y_true=y, y_pred=y_pred)
